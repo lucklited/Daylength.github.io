@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Day Length Calculator - Cambodia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    label {
+      display: block;
+      position: absolute;
+      top: 14%;
+      left: 65.5%;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    select {
+      padding: 5px;
+      width: 200px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      display: block;
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+    input {
+      width: 150px;
+      height: 20px;
+      padding: 15px;
+      cursor: text;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      font-family: "roboto", monospace;
+      color: #ffffff;
+      background-color: #0080ff;
+      border: none;
+      outline: none;
+      border-radius: 5px;
+      top: 20%;
+      left: 80%;
+      font-size: 18px;
+    }
+    ::-webkit-calendar-picker-indicator{
+      background-color: #ffffff;
+      padding: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+
+</head>
+<body>
+  <h1 style="text-align: center;">Day Length Calculator - Cambodia</h1>
+  
+  <label for="date">Date</label>
+
+  <input type="date" id="date" required>
+
+  <select id="location" required>
+    <option value="">Select Location</option>
+    <option value="11.5564,104.9282">Phnom Penh (11.5564, 104.9282)</option>
+    <option value="13.4125,103.8669">Siem Reap (13.4125, 103.8669)</option>
+    <option value="10.6118,103.5296">Sihanoukville (10.6118, 103.5296)</option>
+    <!-- Add more options as needed -->
+  </select>
+  <br>
+  <button onclick="calculateDayLength()">Calculate</button>
+  <div id="result"></div>
+
+  <script>
+    function calculateDayLength() {
+      const dateInput = document.getElementById('date').value;
+      const locationInput = document.getElementById('location').value;
+
+      // Form validation check
+      if (dateInput === '' || locationInput === '') {
+        alert('Please fill in all the fields.');
+        return;
+      }
+
+      const date = new Date(dateInput);
+      const [latitude, longitude] = locationInput.split(',');
+
+      const times = SunCalc.getTimes(date, parseFloat(latitude), parseFloat(longitude));
+      const sunrise = times.sunrise;
+      const sunset = times.sunset;
+      const dayLength = sunset - sunrise;
+
+      const sunriseTime = sunrise.getHours() + ':' + sunrise.getMinutes().toString().padStart(2, '0');
+      const sunsetTime = sunset.getHours() + ':' + sunset.getMinutes().toString().padStart(2, '0');
+      const hours = Math.floor(dayLength / (1000 * 60 * 60));
+      const minutes = Math.floor((dayLength % (1000 * 60 * 60)) / (1000 * 60));
+
+      const resultElement = document.getElementById('result');
+      resultElement.innerHTML = 'Sunrise: ' + sunriseTime + '<br>' +
+                                'Sunset: ' + sunsetTime + '<br>' +
+                                'Day Length: ' + hours + 'h ' + minutes + 'm';
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.8.0/suncalc.min.js"></script>
+</body>
+</html>
